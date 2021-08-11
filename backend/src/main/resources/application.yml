@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ships
+  datasource:
+    username: ships-db
+    password: aak7QWDDcrM9mQnUFf9
+    url: jdbc:postgresql://localhost:5432/ships-db
+    hikari:
+      auto-commit: true
+  jpa:
+    hibernate:
+      ddl-auto: create
+    open-in-view: false
+    properties:
+      hibernate:
+        types:
+          print:
+            banner: false
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
