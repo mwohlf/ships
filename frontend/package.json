@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "// 4": " ----------- build:   -------------------",
     "prebuild": "openapi-generator-cli generate -i ../etc/api-docs.json -g typescript-angular -o src/generated",
     "build": "ng build --output-path build/dist/META-INF/resources/",
@@ -18,10 +18,14 @@
     "@angular/common": "~12.2.0",
     "@angular/compiler": "~12.2.0",
     "@angular/core": "~12.2.0",
+    "@angular/flex-layout": "^12.0.0-beta.34",
     "@angular/forms": "~12.2.0",
+    "@angular/material": "^12.2.1",
     "@angular/platform-browser": "~12.2.0",
     "@angular/platform-browser-dynamic": "~12.2.0",
     "@angular/router": "~12.2.0",
+    "material-design-icons": "^3.0.1",
+    "ngx-file-drop": "^11.1.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"

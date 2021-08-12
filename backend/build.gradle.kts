@@ -23,9 +23,9 @@ tasks.named<BootJar>("bootJar") {
 // see https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md for the Docker template
 configure<com.google.cloud.tools.jib.gradle.JibExtension> {
     val baseImage: String by project
-    val imagePrefix: String by project
+    val imageName: String by project
     from.image = baseImage
-    to.image = "${imagePrefix}/${project.name}"
+    to.image = "${imageName}"  // ships
     container.creationTime = "USE_CURRENT_TIMESTAMP"
     container.ports = kotlin.collections.listOf("8080")
     container.jvmFlags = kotlin.collections.listOf(

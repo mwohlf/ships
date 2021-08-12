@@ -19,7 +19,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Table(name = "owner")
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = {"id", "name"})
 public class Owner {
 
     public static final String FIND_OWNER_BY_NAME = "FIND_OWNER_BY_NAME";

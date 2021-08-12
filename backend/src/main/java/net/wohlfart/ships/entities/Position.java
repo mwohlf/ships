@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -20,7 +21,7 @@ public class Position implements Serializable {
     private Long shipId;
 
     @Id
-    private Date timestamp;
+    private Instant timestamp;
 
     private float latitude;
 

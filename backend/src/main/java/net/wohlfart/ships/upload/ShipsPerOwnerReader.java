@@ -8,9 +8,11 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class ShipsPerOwnerReader extends UploadHandler {
+public class ShipsPerOwnerReader extends AbstractUploadHandler {
 
     final String FILENAME = "ships_per_owner.csv";
 
@@ -26,17 +28,8 @@ public class ShipsPerOwnerReader extends UploadHandler {
         super(entityManager);
     }
 
-    static final CSVFormat FILE_FORMAT = CSVFormat.Builder.create()
-            .setAllowDuplicateHeaderNames(false)
-            .setHeader()
-            .setTrim(true)
-            .setIgnoreHeaderCase(true)
-            .setIgnoreSurroundingSpaces(true)
-            .build();
-
-
     @Override
-    @Transactional // persisting a whole file within a single transaction
+    @Transactional
     public void offerContent(UploadContent uploadContent) {
         if (uploadContent.getName().equals(FILENAME)) {
             processContent(uploadContent);
@@ -44,6 +37,7 @@ public class ShipsPerOwnerReader extends UploadHandler {
     }
 
     void processContent(UploadContent uploadContent) {
+        log.info("<processContent> for {}", uploadContent.getName());
         try (CSVParser csvParser = new CSVParser(uploadContent.newReader(), FILE_FORMAT)) {
             Map<String, Integer> ownerName2CsvColumn = csvParser.getHeaderMap();
             List<CSVRecord> allRecords = csvParser.getRecords();
@@ -52,6 +46,7 @@ public class ShipsPerOwnerReader extends UploadHandler {
                     int ownerColumn = ownerName2CsvColumn.get(owner.getName());
                     Collection<String> shipNamesInColumn = filterForColumn(ownerColumn, allRecords);
                     attachNewShips(owner, shipNamesInColumn);
+                    entityManager.persist(owner);
                 });
             }
         } catch (Exception ex) {
@@ -69,16 +64,16 @@ public class ShipsPerOwnerReader extends UploadHandler {
 
     Collection<String> filterForColumn(Integer columnNumber, List<CSVRecord> allRecords) {
         return allRecords.stream()
-                .map(strings -> strings.get(columnNumber))
-                .filter(string -> string != null && !string.isEmpty())
-                .map(String::trim)
-                .collect(Collectors.toList());
+            .map(strings -> strings.get(columnNumber))
+            .filter(string -> string != null && !string.isEmpty())
+            .map(String::trim)
+            .collect(Collectors.toList());
     }
 
     Collection<String> readAllOwnedShipNames(Owner owner) {
         return owner.getShips().stream()
-                .map(Ship::getName)
-                .collect(Collectors.toSet());
+            .map(Ship::getName)
+            .collect(Collectors.toSet());
     }
 
 }

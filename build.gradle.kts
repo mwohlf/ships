@@ -4,7 +4,7 @@ plugins {
     // just to nail the versions for the subprojects, we don't apply them in the root:
     id("org.springframework.boot").version("2.5.3").apply(false)
     id("com.github.node-gradle.node").version("3.1.0").apply(false)
-    id("com.google.cloud.tools.jib").version("3.0.0").apply(false)
+    id("com.google.cloud.tools.jib").version("3.1.3").apply(false)
 }
 
 allprojects {

@@ -4,10 +4,21 @@ version: "3.8"
 #   - DB backends port 5432 for access manager
 #
 # boot this stack up with docker swarm:
-#    docker stack deploy -c docker-compose-services.yml ships-services
+#    docker stack deploy -c docker-compose-full.yml ships-services
 #
 
 services:
+
+  ships-service:
+    image: ships:latest
+    ports:
+      - "80:8080"
+    environment:
+      - SPRING_DATASOURCE_USERNAME=ships-db
+      - SPRING_DATASOURCE_PASSWORD=aak7QWDDcrM9mQnUFf9
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ships-service-db:5432/ships-db
+    deploy:
+      replicas: 1
 
   ships-service-db:
     image: postgres:12.3

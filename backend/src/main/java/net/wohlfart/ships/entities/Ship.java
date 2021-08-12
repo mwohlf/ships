@@ -18,7 +18,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "ship")
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = {"id", "name"})
 @NoArgsConstructor
 public class Ship {
 

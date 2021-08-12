@@ -32,7 +32,7 @@ public class UploadContent {
     }
 
     public Reader newReader() {
-        return new InputStreamReader(new ByteBufInputStream(buffer));
+        return new InputStreamReader(new ByteBufInputStream(buffer.asReadOnly().resetReaderIndex()));
     }
 
     @NonNull

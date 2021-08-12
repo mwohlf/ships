@@ -10,6 +10,10 @@
                 <mat-icon>warning_amber</mat-icon>
                 Configure
             </a>
+            <a mat-list-item routerLink="upload" routerLinkActive="active">
+                <mat-icon>warning_amber</mat-icon>
+                Upload
+            </a>
             <a mat-list-item routerLink="fetch" routerLinkActive="active">
                 <mat-icon>format_list_bulleted</mat-icon>
                 Fetch Data
@@ -36,11 +40,8 @@
                 *ngIf="isHandset$ | async">
                 <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
             </button>
-            <span>Guided Tests Control Panel</span>
+            <span>Ships Application</span>
         </mat-toolbar>
-        <router-outlet>
-
-
-        </router-outlet>
+        <router-outlet> </router-outlet>
     </mat-sidenav-content>
 </mat-sidenav-container>
