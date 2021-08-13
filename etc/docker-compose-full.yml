@@ -21,7 +21,7 @@ services:
       replicas: 1
 
   ships-service-db:
-    image: postgres:12.3
+    image: postgres:13-alpine
     ports:
       - "5432:5432"
     environment:

@@ -1,15 +1,25 @@
 server:
   port: 8080
 
+# http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
 spring:
   application:
     name: ships
+  mustache:
+    check-template-location: false
+    enabled: false
   datasource:
     username: ships-db
     password: aak7QWDDcrM9mQnUFf9
     url: jdbc:postgresql://localhost:5432/ships-db
     hikari:
-      auto-commit: false
+      auto-commit: true
   jpa:
     hibernate:
       ddl-auto: create
@@ -24,8 +34,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
-springdoc:
-  api-docs:
-    enabled: true
-  swagger-ui:
-    enabled: true
+logging:
+  level:
+    root: info
+

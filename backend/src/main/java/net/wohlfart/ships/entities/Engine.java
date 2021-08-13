@@ -6,12 +6,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NamedQueries({
-        @NamedQuery(
-                name = Engine.FIND_ENGINE_BY_ENGINE_ID,
-                query = "FROM Engine engine WHERE engine.engineId = :engineId"
-        )
-})
+
+@NamedQuery(
+    name = Engine.FIND_ENGINE_BY_ENGINE_ID,
+    query = "FROM Engine engine WHERE engine.engineId = :engineId"
+)
 @Data
 @Entity
 @Table(name = "engine")

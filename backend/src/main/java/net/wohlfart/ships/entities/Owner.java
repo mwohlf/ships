@@ -9,12 +9,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@NamedQueries({
-        @NamedQuery(
-                name = Owner.FIND_OWNER_BY_NAME,
-                query = "FROM Owner owner WHERE owner.name = :ownerName"
-        )
-})
+@NamedQuery(
+    name = Owner.FIND_OWNER_BY_NAME,
+    query = "FROM Owner owner WHERE owner.name = :ownerName"
+)
 @Data
 @Entity
 @NoArgsConstructor

@@ -9,23 +9,31 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UploadService {
 
-    final static Object monitor = new Object();
+    static final Object MONITOR = new Object();
 
-    final ShipsPerOwnerReader shipsPerOwnerReader;
+    final AbstractUploadHandler positionCsvReader;
 
-    final ShipEngineReader shipEngineReader;
+    final AbstractUploadHandler positionJsonReader;
 
-    final PositionTimeseriesReader positionTimeseriesReader;
+    final AbstractUploadHandler shipEngineReader;
 
-    final SpeedTimeseriesReader speedTimeseriesReader;
+    final AbstractUploadHandler shipsPerOwnerReader;
+
+    final AbstractUploadHandler speedCsvReader;
+
+    final AbstractUploadHandler speedJsonReader;
 
 
     public void uploadDatabaseContent(UploadContent uploadContent) {
-        synchronized (monitor) { // only run one file insert at a time to avoid deadlocks in transactions
-            shipsPerOwnerReader.offerContent(uploadContent);
+        synchronized (MONITOR) { // only run one file insert at a time to avoid deadlocks in transactions
             shipEngineReader.offerContent(uploadContent);
-            positionTimeseriesReader.offerContent(uploadContent);
-            speedTimeseriesReader.offerContent(uploadContent);
+            shipsPerOwnerReader.offerContent(uploadContent);
+
+            positionCsvReader.offerContent(uploadContent);
+            positionJsonReader.offerContent(uploadContent);
+
+            speedCsvReader.offerContent(uploadContent);
+            speedJsonReader.offerContent(uploadContent);
         }
     }
 

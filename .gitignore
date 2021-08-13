@@ -21,3 +21,4 @@ yarn.lock
 /etc/input/
 /frontend/src/generated/
 /frontend/openapitools.json
+/etc/http-client.env.json

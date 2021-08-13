@@ -1,0 +1,15 @@
+
+
+## example call:
+# https://services.marinetraffic.com/api/exportvesseltrack/8205c862d0572op1655989d939f1496c092ksvs4/v:3/period:daily/days:3/mmsi:241486000
+
+###
+GET {{endpoint}}/{{api-key}}/v:3/period:hourly/days:10/mmsi:241486000/protocol:jsono
+
+
+###
+GET {{endpoint}}/{{api-key}}/v:3/period:hourly/days:2/mmsi:{{shipA}}/protocol:jsono
+
+
+###
+GET {{endpoint}}/{{api-key}}/v:3/period:hourly/days:2/mmsi:{{shipB}}/protocol:jsono

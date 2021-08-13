@@ -55,15 +55,24 @@ dependencies {
     implementation(libs.postgresql.driver)
     implementation(libs.commons.csv)
     implementation(libs.netty)
+    implementation("com.squareup.okhttp:okhttp:2.7.5")
 
     implementation(libs.jackson.jsr310)
 
     compileOnly(libs.lombok)
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+    compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
+    annotationProcessor(libs.boot.configuration.processor)
+
     // ---- testing
     testImplementation(libs.spring.boot.test)
+    implementation(platform("org.testcontainers:testcontainers-bom:1.15.3")) //import bom
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
+    testRuntimeOnly ("org.junit.jupiter:junit-jupiter-engine:5.3.1")
 
     // ---- the frontend
     implementation("net.wohlfart.ships:frontend:0.0.1-SNAPSHOT")
@@ -78,3 +87,5 @@ publishing {
         }
     }
 }
+
+

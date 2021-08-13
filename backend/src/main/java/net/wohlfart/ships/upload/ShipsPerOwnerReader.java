@@ -4,15 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.wohlfart.ships.controller.UploadException;
 import net.wohlfart.ships.entities.Owner;
 import net.wohlfart.ships.entities.Ship;
-import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +29,15 @@ public class ShipsPerOwnerReader extends AbstractUploadHandler {
     @Override
     @Transactional
     public void offerContent(UploadContent uploadContent) {
-        if (uploadContent.getName().equals(FILENAME)) {
-            processContent(uploadContent);
+        if (uploadContent.fileNameMatches(FILENAME)) {
+            insertContent(uploadContent.newReader());
         }
     }
 
-    void processContent(UploadContent uploadContent) {
-        log.info("<processContent> for {}", uploadContent.getName());
-        try (CSVParser csvParser = new CSVParser(uploadContent.newReader(), FILE_FORMAT)) {
+    @Override
+    @Transactional
+    public void insertContent(Reader reader) {
+        try (CSVParser csvParser = new CSVParser(reader, CSV_FILE_FORMAT)) {
             Map<String, Integer> ownerName2CsvColumn = csvParser.getHeaderMap();
             List<CSVRecord> allRecords = csvParser.getRecords();
             for (String ownerName : ownerName2CsvColumn.keySet()) {
@@ -50,7 +49,7 @@ public class ShipsPerOwnerReader extends AbstractUploadHandler {
                 });
             }
         } catch (Exception ex) {
-            throw new UploadException("failed Uploading '" + uploadContent.getName() + "', changes will be rolled back", ex);
+            throw new UploadException("failed Uploading, changes will be rolled back", ex);
         }
     }
 
@@ -58,7 +57,7 @@ public class ShipsPerOwnerReader extends AbstractUploadHandler {
         Collection<String> alreadyKnownShipNames = readAllOwnedShipNames(owner);
         shipNamesInColumn.removeAll(alreadyKnownShipNames);
         for (String shipName : shipNamesInColumn) {
-            owner.getShips().add(findOrCreateShip(shipName).orElseThrow());
+            owner.getShips().add(findOrCreateShipForName(shipName).orElseThrow());
         }
     }
 

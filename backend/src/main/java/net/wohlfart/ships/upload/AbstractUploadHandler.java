@@ -1,5 +1,6 @@
 package net.wohlfart.ships.upload;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.wohlfart.ships.entities.Engine;
 import net.wohlfart.ships.entities.EngineType;
@@ -8,28 +9,31 @@ import net.wohlfart.ships.entities.Ship;
 import org.apache.commons.csv.CSVFormat;
 
 import javax.persistence.EntityManager;
+import java.io.Reader;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.ResolverStyle;
-import java.time.temporal.TemporalAccessor;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
 
+/**
+ * This is an abstract base class for reader implementation
+ * we implement tools like parsers and lookups for db entities
+ * to be used by the actual implementation of a database reader.
+ * This is also providing the entity manager for the child classes
+ */
 @Slf4j
 public abstract class AbstractUploadHandler {
 
     final EntityManager entityManager;
 
-    static final CSVFormat FILE_FORMAT = CSVFormat.Builder.create()
+    static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+
+    static final CSVFormat CSV_FILE_FORMAT = CSVFormat.Builder.create()
         .setAllowDuplicateHeaderNames(false)
         .setHeader()
         .setTrim(true)
@@ -37,19 +41,53 @@ public abstract class AbstractUploadHandler {
         .setIgnoreSurroundingSpaces(true)
         .build();
 
+    static final DateTimeFormatter CSV_FILE__DATE_FORMAT = DateTimeFormatter
+        .ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US)
+        .withZone(ZoneId.of("+0"));
+
+
+    // common column headers
+    static final String SHIP = "SHIP";    // external id used in csv files
+    static final String TIMESTAMP = "TIMESTAMP";
+    static final String LON = "LON";
+    static final String LAT = "LAT";
+    static final String SPEED = "SPEED";
+    // used in the ship engine file
+    static final String MMSI = "mmsi";
+    static final String SHIP_NAME = "ship_name";   // csv export
+
+
+    // marine traffic format and strings
+    static final DateTimeFormatter JSON_IMPORT__DATE_FORMAT = DateTimeFormatter
+        .ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        .withZone(ZoneId.of("+0"));
+    static final String MT_SPEED = "SPEED";
+    static final String MT_LON = "LON";
+    static final String MT_LAT = "LAT";
+    static final String MT_SHIP_ID = "SHIP_ID";       // id from maritime traffic export
+    static final String MT_IMO = "IMO";               // from maritime traffic export
+    static final String MT_MMSI = "MMSI";               // from maritime traffic export
+    static final String MT_TIMESTAMP = "TIMESTAMP";
+
+
     AbstractUploadHandler(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
-    abstract void offerContent(UploadContent uploadContent);
+
+    // entrypoint for analyzing uploaded conternt
+    public abstract void offerContent(UploadContent uploadContent);
+
+    // input stream reading
+    public abstract void insertContent(Reader reader);
 
 
     Optional<Owner> findOrCreateOwner(String ownerName) {
         final List<Owner> owners = entityManager.createNamedQuery(Owner.FIND_OWNER_BY_NAME, Owner.class)
-                .setParameter("ownerName", ownerName)
-                .getResultList();
+            .setParameter("ownerName", ownerName)
+            .getResultList();
 
-        if (owners == null || owners.size() == 0) {
+        if (owners == null || owners.isEmpty()) {
             Owner result = new Owner();
             result.setName(ownerName);
             log.info("persisting new owner {}", result);
@@ -66,12 +104,12 @@ public abstract class AbstractUploadHandler {
     }
 
 
-    Optional<Ship> findOrCreateShip(String shipName) {
+    Optional<Ship> findOrCreateShipForName(String shipName) {
         final List<Ship> ships = entityManager.createNamedQuery(Ship.FIND_SHIP_BY_NAME, Ship.class)
-                .setParameter("shipName", shipName)
-                .getResultList();
+            .setParameter("shipName", shipName)
+            .getResultList();
 
-        if (ships == null || ships.size() == 0) {
+        if (ships == null || ships.isEmpty()) {
             Ship result = new Ship();
             result.setName(shipName);
             log.info("persisting new ship {}", result);
@@ -87,13 +125,60 @@ public abstract class AbstractUploadHandler {
         return Optional.empty();
     }
 
+    Optional<Ship> findOrCreateShipForNameOrMmsi(String shipName, Long mmsi) {
+        final List<Ship> ships = entityManager.createNamedQuery(Ship.FIND_SHIP_BY_NAME_OR_MMSI, Ship.class)
+            .setParameter("shipName", shipName)
+            .setParameter("mmsi", mmsi)
+            .getResultList();
+
+        if (ships == null || ships.isEmpty()) {
+            Ship result = new Ship();
+            result.setName(shipName);
+            result.setMmsi(mmsi);
+            log.info("persisting new ship {}", result);
+            return Optional.of(entityManager.merge(result));
+        }
+
+        if (ships.size() == 1) {
+            log.debug("found ship {}", shipName);
+            Ship result = ships.get(0);
+            result.setName(shipName);
+            result.setMmsi(mmsi);
+            return Optional.of(ships.get(0));
+        }
+
+        log.warn("found multiple ships matching '{}'/'{}', ignoring for insert", shipName, mmsi);
+        return Optional.empty();
+    }
+
+    Optional<Ship> findOrCreateShipForMarineTrafficId(String marineTrafficId) {
+        final List<Ship> ships = entityManager.createNamedQuery(Ship.FIND_SHIP_BY_MARINE_TRAFFIC_ID, Ship.class)
+            .setParameter("marineTrafficId", marineTrafficId)
+            .getResultList();
+
+        if (ships == null || ships.isEmpty()) {
+            Ship result = new Ship();
+            result.setMarineTrafficId(marineTrafficId);
+            log.info("persisting new ship {}", result);
+            return Optional.of(entityManager.merge(result));
+        }
+
+        if (ships.size() == 1) {
+            log.debug("found ship {}", marineTrafficId);
+            return Optional.of(ships.get(0));
+        }
+
+        log.warn("found multiple ships matching name '{}', ignoring for insert", marineTrafficId);
+        return Optional.empty();
+    }
+
 
     Optional<EngineType> findOrCreateEngineType(String engineTypeName) {
         final List<EngineType> engineTypes = entityManager.createNamedQuery(EngineType.FIND_ENGINE_TYPE_BY_NAME, EngineType.class)
-                .setParameter("engineTypeName", engineTypeName)
-                .getResultList();
+            .setParameter("engineTypeName", engineTypeName)
+            .getResultList();
 
-        if (engineTypes == null || engineTypes.size() == 0) {
+        if (engineTypes == null || engineTypes.isEmpty()) {
             EngineType result = new EngineType();
             result.setName(engineTypeName);
             log.info("persisting new engineType {}", result);
@@ -112,10 +197,10 @@ public abstract class AbstractUploadHandler {
 
     Optional<Engine> findOrCreateEngine(String engineId) {
         final List<Engine> engines = entityManager.createNamedQuery(Engine.FIND_ENGINE_BY_ENGINE_ID, Engine.class)
-                .setParameter("engineId", engineId)
-                .getResultList();
+            .setParameter("engineId", engineId)
+            .getResultList();
 
-        if (engines == null || engines.size() == 0) {
+        if (engines == null || engines.isEmpty()) {
             Engine result = new Engine();
             result.setEngineId(engineId);
             log.info("persisting new engine {}", result);
@@ -131,12 +216,22 @@ public abstract class AbstractUploadHandler {
         return Optional.empty();
     }
 
-    Instant parseUtcDateTimeString(String dateTimeString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd HH:mm:ss" , Locale.US ).withZone(ZoneId.of("+0"));  // Specify locale to determine human language and cultural norms used in translating that input string.
-        LocalDateTime localDateTime = LocalDateTime.parse( dateTimeString , formatter);
-        ZoneId zoneId = ZoneId.of("+0");
-        ZonedDateTime zdt = localDateTime.atZone( zoneId ) ;
-        return zdt.toInstant() ;
+    Instant parseUtcDateTimeStringWithBlank(String dateTimeString) {
+        return LocalDateTime
+            .parse(dateTimeString, CSV_FILE__DATE_FORMAT)
+            .atZone(ZoneId.of("+0"))
+            .toInstant();
+    }
+
+    Instant parseUtcDateTimeStringWithT(String dateTimeString) {
+        return LocalDateTime
+            .parse(dateTimeString, JSON_IMPORT__DATE_FORMAT)
+            .atZone(ZoneId.of("+0"))
+            .toInstant();
+    }
+
+    float parseDouble(String string) {
+        return Float.parseFloat(string);
     }
 
 }

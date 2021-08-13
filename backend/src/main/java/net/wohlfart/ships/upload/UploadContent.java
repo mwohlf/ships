@@ -24,8 +24,9 @@ public class UploadContent {
 
     public static UploadContent create(MultipartFile multipartFile) throws IOException {
         String name = multipartFile.getOriginalFilename();
+        Assert.notNull(name, "unknown filename");
         long size = multipartFile.getSize();
-        Assert.isTrue( size < Integer.MAX_VALUE, "filesize too large");
+        Assert.isTrue(size < Integer.MAX_VALUE, "filesize too large");
         final ByteBuf buffer = Unpooled.directBuffer((int) size);
         buffer.writeBytes(multipartFile.getInputStream(), (int) size);
         return new UploadContent(name, buffer);
@@ -35,9 +36,28 @@ public class UploadContent {
         return new InputStreamReader(new ByteBufInputStream(buffer.asReadOnly().resetReaderIndex()));
     }
 
-    @NonNull
-    public String getName() {
-        return name;
+    public boolean containsColumns(String... requiredColumns) {
+        byte[] bytes = new byte[Math.min(buffer.readableBytes(), 1024)];
+        buffer.getBytes(buffer.readerIndex(), bytes);
+        String headerLine = new String(bytes).split("\\R")[0];
+        for (String columnHeader : requiredColumns) {
+            if (!headerLine.contains(columnHeader)) {
+                return false;
+            }
+        }
+        return true;
     }
 
+    public boolean fileNameMatches(String filename) {
+        return this.name.toLowerCase().endsWith(filename.toLowerCase());
+    }
+
+    @Override
+    public String toString() {
+        return "UploadContent '" + this.name + "' ";
+    }
+
+    public boolean hasJsonPostfix() {
+        return this.name.toLowerCase().endsWith(".json");
+    }
 }

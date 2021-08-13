@@ -3,15 +3,13 @@ package net.wohlfart.ships.upload;
 import lombok.extern.slf4j.Slf4j;
 import net.wohlfart.ships.controller.UploadException;
 import net.wohlfart.ships.entities.Engine;
-import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.io.Reader;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -21,11 +19,9 @@ import java.util.stream.Collectors;
 @Component
 public class ShipEngineReader extends AbstractUploadHandler {
 
-    private static final String MMSI = "mmsi";
-    private static final String SHIP_NAME = "ship_name";
-    public static final List<String> ENGINE_PREFIXES = List.of("engine1", "engine2", "engine3");
-
     final String FILENAME = "ship_engines.csv";
+
+    public static final List<String> ENGINE_PREFIXES = List.of("engine1", "engine2", "engine3");
 
     public ShipEngineReader(EntityManager entityManager) {
         super(entityManager);
@@ -34,24 +30,25 @@ public class ShipEngineReader extends AbstractUploadHandler {
     @Override
     @Transactional
     public void offerContent(UploadContent uploadContent) {
-        if (uploadContent.getName().equals(FILENAME)) {
-            processContent(uploadContent);
+        if (uploadContent.fileNameMatches(FILENAME) || uploadContent.containsColumns(SHIP_NAME, MMSI)) {
+            insertContent(uploadContent.newReader());
         }
     }
 
-    void processContent(UploadContent uploadContent) {
-        log.info("<processContent> for {}", uploadContent.getName());
-        try (CSVParser csvParser = new CSVParser(uploadContent.newReader(), FILE_FORMAT)) {
+    @Override
+    @Transactional
+    public void insertContent(Reader reader) {
+        try (CSVParser csvParser = new CSVParser(reader, CSV_FILE_FORMAT)) {
             for (CSVRecord shipRecord : csvParser.getRecords()) {
                 String shipName = shipRecord.get(SHIP_NAME);
-                findOrCreateShip(shipName).ifPresent(ship -> {
-                    ship.setMmsi(Long.parseLong(shipRecord.get(MMSI))); // TODO: validate before parsing
+                Long mmsi = Long.parseLong(shipRecord.get(MMSI));
+                findOrCreateShipForNameOrMmsi(shipName, mmsi).ifPresent(ship -> {
                     ship.setEngines(findEngines(shipRecord));
                     entityManager.persist(ship); // need to persist because the engines changed
                 });
             }
         } catch (Exception ex) {
-            throw new UploadException("failed Uploading '" + uploadContent.getName() + "', changes will be rolled back", ex);
+            throw new UploadException("failed Uploading, changes will be rolled back", ex);
         }
     }
 
@@ -73,6 +70,5 @@ public class ShipEngineReader extends AbstractUploadHandler {
             .filter(Objects::nonNull)
             .collect(Collectors.toSet());
     }
-
 
 }

@@ -27,7 +27,7 @@ public class DatabaseController {
             summary = "Upload content into the Database.",
             description = "The maximum file size is 100MB, the file will be analyzed and inserted into the Database")
     @ResponseBody
-    public UploadResponse uploadDatabaseContent(@RequestParam("file") MultipartFile multipartFile) {
+    public UploadResponse uploadDatabaseContent(@RequestParam MultipartFile multipartFile) {
         log.info("<uploadDatabaseContent> begin at {}", Instant.now());
         try {
             uploadService.uploadDatabaseContent(UploadContent.create(multipartFile));

@@ -1,15 +1,11 @@
 package net.wohlfart.ships.entities;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Date;
 
 @Data
 @Entity
@@ -18,13 +14,15 @@ import java.util.Date;
 public class Position implements Serializable {
 
     @Id
-    private Long shipId;
+    @ManyToOne
+    @MapKeyColumn(name = "ship_id")
+    private Ship ship;
 
     @Id
     private Instant timestamp;
 
-    private float latitude;
+    private double latitude;
 
-    private float longitude;
+    private double longitude;
 
 }

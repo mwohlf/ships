@@ -18,7 +18,7 @@ public class DatabaseService {
 
     final EntityManager entityManager;
 
-    @Transactional // persisting a whole file within a single transaction
+    @Transactional
     public void emptyDatabase() {
         new Cleaner<>(Engine.class) . run();
         new Cleaner<>(EngineType.class) . run();
