@@ -1,1 +1,45 @@
 <h3>View Data</h3>
+
+<div>
+    <button mat-flat-button color="primary" (click)="aggregationSpeed()">Calculate average speed per ship and day</button>
+</div>
+<div>
+    <button mat-flat-button color="primary" (click)="aggregationTimeStamps()">Start / Stop timestamp 12-14</button>
+</div>
+<div>
+    <button mat-flat-button color="primary" (click)="aggregationMiles()">Average miles per owner between 12-14</button>
+</div>
+<div>
+    <button mat-flat-button color="primary" (click)="aggregationEngines()">Aggregate engines</button>
+</div>
+
+<ng-container *ngIf="(gridData$ | async) as gridData; else noData">
+
+    <p *ngIf="gridData.length == 0">no data</p>
+
+    <ng-container *ngIf="gridData.length > 0">
+        <table>
+            <tr>
+                <th *ngFor="let item of gridData[0] | keyvalue">
+                    {{item.key}}
+                </th>
+            </tr>
+            <tr *ngFor="let row of gridData">
+                <td *ngFor="let item of row | keyvalue">
+                    {{item.value}}
+                </td>
+            </tr>
+        </table>
+    </ng-container>
+
+</ng-container>
+
+<ng-template #noData>
+    <div class="container">
+        <div class="row pt-5">
+            <div class="col-8">
+                no data...
+            </div>
+        </div>
+    </div>
+</ng-template>

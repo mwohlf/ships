@@ -1,13 +1,11 @@
 package net.wohlfart.ships.entities;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Date;
 
 @Data
 @Entity
@@ -21,6 +19,7 @@ public class Speed implements Serializable {
     private Ship ship;
 
     @Id
+    @Column(columnDefinition= "TIMESTAMP WITH TIME ZONE")
     private Instant timestamp;
 
     // 1 m/s = 1.94384 knots

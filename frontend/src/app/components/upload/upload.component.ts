@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
 import {DatabaseControllerService} from "../../../generated";
 import {SnackBarService} from "../snack-bar/snack-bar.service";
+import {BehaviorSubject} from "rxjs";
 
 @Component({
     selector: 'app-upload',
@@ -12,6 +13,9 @@ export class UploadComponent {
 
     public files: NgxFileDropEntry[] = [];
 
+    private notes = new BehaviorSubject<string[]>([]);
+    public notes$ = this.notes.asObservable();
+
     constructor(
         private databaseControllerService: DatabaseControllerService,
         private snackBarService: SnackBarService,
@@ -19,6 +23,18 @@ export class UploadComponent {
     }
 
     public dropped(files: NgxFileDropEntry[]) {
+        // setup initial counts
+        let tableMap = new Map<string, number>();
+        this.databaseControllerService.details().subscribe(
+            next => {
+                next.tableDetails?.forEach( table => {
+                    if (table.name) {
+                        tableMap.set(table.name, table.rowCount || 0);
+                    }
+                })
+            }
+        )
+
         this.files = files;
         this.snackBarService.displayInfoMessage("uploading content, please wait...");
         for (const droppedFile of files) {
@@ -29,9 +45,10 @@ export class UploadComponent {
                     // Here you can access the real file
                     console.log(fileEntry.name, file);
                     this.databaseControllerService.uploadDatabaseContent(file).subscribe(
-                        (uploadResponse) => {
+                        (uploadResponse: any) => {
                             console.debug("uploadResponse: ", uploadResponse);
                             this.snackBarService.displayInfoMessage("...finished uploading");
+                            this.displayDelta(tableMap);
                         }
                     );
                 });
@@ -51,4 +68,24 @@ export class UploadComponent {
         console.log(event);
     }
 
+    private displayDelta(initialTableMap: Map<string, number>) {
+        console.log("initialTableMap", initialTableMap);
+        this.databaseControllerService.details().subscribe(
+            nextTableMap => {
+                let nextNotes: string[] = [];
+                nextTableMap.tableDetails?.forEach( newTable => {
+                    if (newTable.name && initialTableMap) {
+                        let initialCount = initialTableMap.get(newTable.name);
+                        let newCount = newTable.rowCount || 0;
+                        console.log("initialCount", initialCount);
+                        console.log("newCount", newCount);
+                        let delta = newCount - initialCount!;
+                        console.log("delta", delta);
+                        nextNotes.push(" table " + newTable.name + ": +" + delta + " -> " + newCount);
+                    }
+                })
+                this.notes.next(nextNotes);
+            }
+        )
+    }
 }

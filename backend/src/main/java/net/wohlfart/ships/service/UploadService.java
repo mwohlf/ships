@@ -25,7 +25,8 @@ public class UploadService {
 
 
     public void uploadDatabaseContent(UploadContent uploadContent) {
-        synchronized (MONITOR) { // only run one file insert at a time to avoid deadlocks in transactions
+        synchronized (MONITOR) {
+
             shipEngineReader.offerContent(uploadContent);
             shipsPerOwnerReader.offerContent(uploadContent);
 

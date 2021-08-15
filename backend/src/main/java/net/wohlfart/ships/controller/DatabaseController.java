@@ -55,13 +55,26 @@ public class DatabaseController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public TableDetailsResponse deleteDatabase(
-        @PathVariable(required = false) @Parameter(description = "delete the content of a table or the whole database", required = false) String entityName
+        @PathVariable(required = false) @Parameter(description = "delete the content of a table or the whole database") String entityName
     ) {
         try {
             databaseService.emptyTable(entityName);
-            return new TableDetailsResponse();
+            return databaseService.checkTableDetails();
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while deleting database content", ex);
+        }
+    }
+
+    @GetMapping(
+        value = "/details",
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public TableDetailsResponse details(
+    ) {
+        try {
+            return databaseService.checkTableDetails();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while checking database status", ex);
         }
     }
 

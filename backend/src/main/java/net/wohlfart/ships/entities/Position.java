@@ -19,6 +19,7 @@ public class Position implements Serializable {
     private Ship ship;
 
     @Id
+    @Column(columnDefinition= "TIMESTAMP WITH TIME ZONE")
     private Instant timestamp;
 
     private double latitude;

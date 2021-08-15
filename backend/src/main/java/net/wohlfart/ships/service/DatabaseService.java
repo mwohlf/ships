@@ -2,6 +2,7 @@ package net.wohlfart.ships.service;
 
 
 import lombok.RequiredArgsConstructor;
+import net.wohlfart.ships.dtos.TableDetailsResponse;
 import net.wohlfart.ships.entities.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -21,8 +22,9 @@ public class DatabaseService {
 
     final EntityManager entityManager;
 
+    // because we have foreighn key refereneces: the order of delete is important
     static final Class<?>[] ALL_ENTITIES = {
-        Engine.class, EngineType.class, Position.class, Ship.class, Speed.class, Owner.class
+        Speed.class, Position.class, Engine.class, EngineType.class, Ship.class, Owner.class
     };
 
     @Transactional
@@ -42,4 +44,19 @@ public class DatabaseService {
         entityManager.createQuery(delete).executeUpdate();
     }
 
+    @Transactional
+    public TableDetailsResponse checkTableDetails() {
+        TableDetailsResponse result = new TableDetailsResponse();
+        Arrays.stream(ALL_ENTITIES)
+            .forEach(
+                entityName -> {
+                    result.getTableDetails()
+                        .add(new TableDetailsResponse.SingeTableDetails(
+                            entityName.getSimpleName(),
+                            entityManager.createQuery("SELECT count(e) FROM " + entityName.getSimpleName() + " e ", Long.class).getSingleResult()
+                        ));
+                }
+            );
+        return result;
+    }
 }

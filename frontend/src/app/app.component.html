@@ -1,11 +1,15 @@
 <mat-sidenav-container class="sidenav-container">
     <!-- not darkMode here -->
+
     <mat-sidenav #drawer class="sidenav" fixedInViewport
                  [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
                  [mode]="(isHandset$ | async) ? 'over' : 'side'"
                  [opened]="(isHandset$ | async) === false">
         <mat-toolbar></mat-toolbar>
         <mat-nav-list>
+            <br/>
+            <br/>
+
             <a mat-list-item routerLink="upload" routerLinkActive="active" class="pl-10">
                 <mat-icon>cloud_upload</mat-icon>
                 &nbsp;&nbsp;Upload Data

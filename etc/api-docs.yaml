@@ -51,6 +51,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StatusResponse'
+  /api/v1/database/details:
+    get:
+      tags:
+      - database-controller
+      operationId: details
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableDetailsResponse'
+  /api/v1/aggregation/timestamps:
+    get:
+      tags:
+      - aggregation-controller
+      operationId: aggregationTimeStamps
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayNode'
+  /api/v1/aggregation/speed:
+    get:
+      tags:
+      - aggregation-controller
+      operationId: aggregationSpeed
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayNode'
+  /api/v1/aggregation/miles:
+    get:
+      tags:
+      - aggregation-controller
+      operationId: aggregationMiles
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayNode'
+  /api/v1/aggregation/engines:
+    get:
+      tags:
+      - aggregation-controller
+      operationId: aggregationEngines
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayNode'
   /api/v1/database/delete/{entityName}:
     delete:
       tags:
@@ -113,3 +173,5 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SingeTableDetails'
+    ArrayNode:
+      type: object

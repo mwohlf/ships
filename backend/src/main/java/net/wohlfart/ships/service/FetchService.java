@@ -51,7 +51,7 @@ public class FetchService {
                 "toDate", DATE_FORMAT.format(toDate)
             ));
         final String uriString = uriComponents.toUriString();
-        log.info("fetching data from {}", uriString);
+        log.info("fromDate: {}, toDate {}, fetching data from {}", DATE_FORMAT.format(fromDate), DATE_FORMAT.format(toDate), uriString);
         Request request = new Request.Builder().url(uriComponents.toUri().toURL()).get().build();
         Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) {

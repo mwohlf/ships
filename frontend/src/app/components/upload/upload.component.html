@@ -15,3 +15,7 @@
     {{ item.relativePath }}
 </p>
 </div>
+
+<ng-container *ngFor="let notes of notes$ | async">
+    <h4>{{notes}}</h4>
+</ng-container>

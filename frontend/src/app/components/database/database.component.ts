@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {DatabaseControllerService} from "../../../generated";
+import {DatabaseControllerService, TableDetailsResponse} from "../../../generated";
 import {SnackBarService} from "../snack-bar/snack-bar.service";
+import {Observable} from "rxjs";
 
 @Component({
     selector: 'app-database',
@@ -9,6 +10,8 @@ import {SnackBarService} from "../snack-bar/snack-bar.service";
 })
 export class DatabaseComponent implements OnInit {
 
+    public databaseDetails$: Observable<TableDetailsResponse> = new Observable<TableDetailsResponse>();
+
     constructor(
         private databaseControllerService: DatabaseControllerService,
         private snackBarService: SnackBarService,
@@ -16,6 +19,7 @@ export class DatabaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.databaseDetails$ = this.databaseControllerService.details();
     }
 
     dropDatabaseContent() {
@@ -24,6 +28,7 @@ export class DatabaseComponent implements OnInit {
             (next) => {
                 console.log(next);
                 snackbar.destroy();
+                this.databaseDetails$ = this.databaseControllerService.details();
             },
             (error: Error) => {
                 console.error(error);

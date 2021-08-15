@@ -11,3 +11,25 @@
     </mat-card-content>
 </mat-card>
 
+
+<mat-card *ngIf="(databaseDetails$ | async) as databaseDetails; else loading">
+    <mat-card-title>
+        Content
+    </mat-card-title>
+    <mat-card-content class="prose">
+        <ng-container *ngFor="let tableDetails of databaseDetails.tableDetails">
+            <h4>Table for {{tableDetails.name}} has {{tableDetails.rowCount}} elements</h4>
+        </ng-container>
+    </mat-card-content>
+</mat-card>
+
+
+<ng-template #loading>
+    <div class="container">
+        <div class="row pt-5">
+            <div class="col-8">
+                loading...
+            </div>
+        </div>
+    </div>
+</ng-template>
