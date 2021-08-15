@@ -1,7 +1,7 @@
 version: "3.8"
 
 ####
-#   - DB backends port 5432 for access manager
+#   - DB backends port 5432
 #
 # boot this stack up with docker swarm:
 #    docker stack deploy -c docker-compose-db.yml ships-services
@@ -17,6 +17,7 @@ services:
       - POSTGRES_DB=ships-db
       - POSTGRES_USER=ships-db
       - POSTGRES_PASSWORD=aak7QWDDcrM9mQnUFf9
+      - TZ=UTC
     deploy:
       replicas: 1
     healthcheck:

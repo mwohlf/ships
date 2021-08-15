@@ -3,8 +3,13 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
+    "// 2": " ----------- swagger -------------------",
+    "predownload-apidocs": "nwget http://localhost:8080/v3/api-docs.yaml -O ../etc/api-docs.yaml",
+    "download-apidocs": "nwget http://localhost:8080/v3/api-docs -O ../etc/api-docs.json",
+    "postdownload-apidocs": "js-beautify ../etc/api-docs.json -o ../etc/api-docs.json",
+    "// 3": " ------------ run -------------------",
     "start": "ng serve --proxy-config proxy.conf.json",
-    "// 4": " ----------- build:   -------------------",
+    "// 4": " ----------- build -------------------",
     "prebuild": "openapi-generator-cli generate -i ../etc/api-docs.json -g typescript-angular -o src/generated",
     "build": "ng build --output-path build/dist/META-INF/resources/",
     "test": "ng test",
@@ -24,6 +29,8 @@
     "@angular/platform-browser": "~12.2.0",
     "@angular/platform-browser-dynamic": "~12.2.0",
     "@angular/router": "~12.2.0",
+    "@tailwindcss/forms": "^0.3.3",
+    "@tailwindcss/typography": "^0.4.1",
     "material-design-icons": "^3.0.1",
     "ngx-file-drop": "^11.1.0",
     "rxjs": "~6.6.0",
@@ -45,9 +52,13 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
+    "prettier": "^2.3.0",
+    "js-beautify": "1.13.5",
     "protractor": "~7.0.0",
+    "tailwindcss": "^2.2.7",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.3.5"
+    "typescript": "~4.3.5",
+    "wget-improved": "3.2.1"
   }
 }

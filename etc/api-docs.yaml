@@ -1,0 +1,55 @@
+openapi: 3.0.1
+info:
+  title: Ships API
+  description: The backend for the Ships Portal
+  version: 0.0.1
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/v1/database:
+    post:
+      tags:
+      - database-controller
+      summary: Upload content into the Database.
+      description: "The maximum file size is 100MB, the file will be analyzed and\
+        \ inserted into the Database"
+      operationId: uploadDatabaseContent
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - multipartFile
+              type: object
+              properties:
+                multipartFile:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+    delete:
+      tags:
+      - database-controller
+      operationId: deleteDatabase
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableDataResponse'
+components:
+  schemas:
+    UploadResponse:
+      type: object
+      properties:
+        text:
+          type: string
+    TableDataResponse:
+      type: object

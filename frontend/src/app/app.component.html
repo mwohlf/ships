@@ -6,13 +6,13 @@
                  [opened]="(isHandset$ | async) === false">
         <mat-toolbar></mat-toolbar>
         <mat-nav-list>
+            <a mat-list-item routerLink="upload" routerLinkActive="active" class="pl-10">
+                <mat-icon>cloud_upload</mat-icon>
+                &nbsp;&nbsp;Upload Data
+            </a>
             <a mat-list-item routerLink="configure" routerLinkActive="active">
                 <mat-icon>warning_amber</mat-icon>
-                Configure
-            </a>
-            <a mat-list-item routerLink="upload" routerLinkActive="active">
-                <mat-icon>warning_amber</mat-icon>
-                Upload
+                &nbsp;&nbsp;Configure
             </a>
             <a mat-list-item routerLink="fetch" routerLinkActive="active">
                 <mat-icon>format_list_bulleted</mat-icon>
@@ -42,6 +42,8 @@
             </button>
             <span>Ships Application</span>
         </mat-toolbar>
-        <router-outlet> </router-outlet>
+        <div class="prose lg:prose-xl lg:max-w-screen-xl p-5">
+            <router-outlet></router-outlet>
+        </div>
     </mat-sidenav-content>
 </mat-sidenav-container>

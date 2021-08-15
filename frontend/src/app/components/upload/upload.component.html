@@ -1,11 +1,11 @@
-<div class="center">
+<h3>Upload Data</h3>
 
     <ngx-file-drop dropZoneLabel="Drop files here"
                    (onFileDrop)="dropped($event)"
                    (onFileOver)="fileOver($event)"
                    (onFileLeave)="fileLeave($event)">
         <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
-            Drop content here!.
+            drop content here
             <!-- button type="button" (click)="openFileSelector()">Browse Files</button -->
         </ng-template>
     </ngx-file-drop>
@@ -24,4 +24,10 @@
             </tbody>
         </table>
     </div>
-</div>
+
+
+
+
+// TODO:
+// 2021-08-14 17:20:10.187  WARN 26446 --- [nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.support.MissingServletRequestPartException: Required request part 'file' is not present]
+//
