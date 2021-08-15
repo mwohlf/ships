@@ -35,6 +35,7 @@ import { StartComponent } from './components/start/start.component';
 import { ErrorComponent } from './components/error/error.component';
 import { DatabaseComponent } from './components/database/database.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import {SnackBarComponent} from "./components/snack-bar/snack-bar.component";
 
 @NgModule({
     declarations: [
@@ -44,7 +45,8 @@ import { NgxFileDropModule } from 'ngx-file-drop';
         ViewComponent,
         StartComponent,
         ErrorComponent,
-        DatabaseComponent
+        DatabaseComponent,
+        SnackBarComponent
     ],
     imports: [
         ApiModule.forRoot(() => new Configuration({basePath: ''})),
@@ -75,7 +77,10 @@ import { NgxFileDropModule } from 'ngx-file-drop';
         MatTooltipModule,
         ReactiveFormsModule,
         ScrollingModule,
-        NgxFileDropModule
+        NgxFileDropModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule
     ],
     providers: [],
     bootstrap: [AppComponent]

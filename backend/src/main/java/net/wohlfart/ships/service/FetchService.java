@@ -2,6 +2,7 @@ package net.wohlfart.ships.service;
 
 import com.squareup.okhttp.OkHttpClient;
 import lombok.RequiredArgsConstructor;
+import net.wohlfart.ships.upload.AbstractUploadHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -16,13 +17,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FetchService {
 
+    final AbstractUploadHandler positionJsonReader;
+
     static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter
         .ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US)
         .withZone(ZoneId.of("+0"));
 
     static final String MARINE_ENDPOINT = "https://services.marinetraffic.com/api/exportvesseltrack/{apiKey}/v:3/period:hourly/days:2/mmsi:{mmsi}/protocol:jsono";
 
-    OkHttpClient client = new OkHttpClient();
+    final OkHttpClient client = new OkHttpClient();
 
 
     public void fetchContent(

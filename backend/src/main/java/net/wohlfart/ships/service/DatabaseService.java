@@ -17,15 +17,17 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class DatabaseService {
 
+    static final String ALL = "ALL";
+
     final EntityManager entityManager;
 
-    final static Class<?>[] ALL_ENTITIES = {
+    static final Class<?>[] ALL_ENTITIES = {
         Engine.class, EngineType.class, Position.class, Ship.class, Speed.class, Owner.class
     };
 
     @Transactional
     public void emptyTable(@Nullable String entityName) throws ClassNotFoundException {
-        if (!StringUtils.hasText(entityName)) {
+        if (!StringUtils.hasText(entityName) || ALL.equalsIgnoreCase(entityName)) {
             Arrays.stream(ALL_ENTITIES)
                 .forEach(this::emptyTable);
         } else {

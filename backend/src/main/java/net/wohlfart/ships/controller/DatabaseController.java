@@ -55,7 +55,7 @@ public class DatabaseController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public TableDetailsResponse deleteDatabase(
-        @PathVariable(required = false) @Parameter(description = "delete the content of a single table", required = false) String entityName
+        @PathVariable(required = false) @Parameter(description = "delete the content of a table or the whole database", required = false) String entityName
     ) {
         try {
             databaseService.emptyTable(entityName);

@@ -1,0 +1,11 @@
+<div fxLayout="column"
+     fxLayoutGap="10px"
+     *ngIf="messages$ | async as messages">
+    <div *ngFor="let message of messages">
+        {{message}}
+    </div>
+    <div *ngIf="progressBar">
+        <mat-progress-bar *ngIf="!progressValue" mode="indeterminate"></mat-progress-bar>
+        <mat-progress-bar *ngIf="progressValue" mode="determinate" [value]="progressValue"></mat-progress-bar>
+    </div>
+</div>

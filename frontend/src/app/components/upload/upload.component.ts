@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
 import {DatabaseControllerService} from "../../../generated";
+import {SnackBarService} from "../snack-bar/snack-bar.service";
 
 @Component({
     selector: 'app-upload',
@@ -13,11 +14,13 @@ export class UploadComponent {
 
     constructor(
         private databaseControllerService: DatabaseControllerService,
+        private snackBarService: SnackBarService,
     ) {
     }
 
     public dropped(files: NgxFileDropEntry[]) {
         this.files = files;
+        this.snackBarService.displayInfoMessage("uploading content, please wait...");
         for (const droppedFile of files) {
             console.debug("droppedFile: ", droppedFile);
             if (droppedFile.fileEntry.isFile && droppedFile.fileEntry.name) {
@@ -28,6 +31,7 @@ export class UploadComponent {
                     this.databaseControllerService.uploadDatabaseContent(file).subscribe(
                         (uploadResponse) => {
                             console.debug("uploadResponse: ", uploadResponse);
+                            this.snackBarService.displayInfoMessage("...finished uploading");
                         }
                     );
                 });

@@ -1,1 +1,13 @@
-<p>database works!</p>
+<h3>Database</h3>
+
+<mat-card>
+    <mat-card-title>
+        Cleanup
+    </mat-card-title>
+    <mat-card-content>
+        <div [style.margin.px]="15">
+            <button mat-flat-button color="primary" (click)="dropDatabaseContent()">Drop Database Content</button>
+        </div>
+    </mat-card-content>
+</mat-card>
+

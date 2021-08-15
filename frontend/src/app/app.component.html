@@ -16,13 +16,13 @@
             </a>
             <a mat-list-item routerLink="view" routerLinkActive="active">
                 <mat-icon>device_hub</mat-icon>
-                View Data
+                &nbsp;&nbsp;View Data
             </a>
             <mat-divider></mat-divider>
 
             <a mat-list-item routerLink="database" routerLinkActive="active">
                 <mat-icon>work_outline</mat-icon>
-                Database
+                &nbsp;&nbsp;Database
             </a>
         </mat-nav-list>
     </mat-sidenav>
@@ -38,8 +38,8 @@
             </button>
             <span>Ships Application</span>
         </mat-toolbar>
-        <div class="prose lg:prose-xl lg:max-w-screen-xl p-5">
+        <article class="prose lg:prose-xl lg:max-w-screen-xl p-5">
             <router-outlet></router-outlet>
-        </div>
+        </article>
     </mat-sidenav-content>
 </mat-sidenav-container>

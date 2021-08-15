@@ -60,7 +60,7 @@ public class UploadServiceTest {
         return entityManager.createQuery("SELECT count(p) from " + clazz.getSimpleName() + " p", Long.class).getSingleResult().longValue();
     }
 
-    /* this test takes 2 minutes...
+    /* this test takes 2 minutes... */
     @Test
     public void testPositionDataUpload() {
         long started = System.currentTimeMillis();
@@ -75,7 +75,7 @@ public class UploadServiceTest {
         assertEquals("43212", String.valueOf(count(Speed.class)), "wrong Speed count");
         System.out.printf("runtime: %d%n ms", time);  // 101221 ms here
     }
-     */
+
 
     @Test
     public void testShipEnginesUpload() {
