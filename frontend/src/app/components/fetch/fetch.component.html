@@ -1,1 +1,59 @@
 <h3>Fetch Content</h3>
+
+
+<mat-card>
+    <mat-card-title>
+        marinetraffic.com
+    </mat-card-title>
+    <mat-card-content>
+
+        <form [formGroup]="formGroup" class="form">
+
+            <div>
+                <mat-form-field appearance="standard" [style.width.px]="400">
+                    <mat-label>Enter the API-Key</mat-label>
+                    <input matInput formControlName="apiKey" class="w-96">
+                    <mat-icon matSuffix>vpn_key</mat-icon>
+                    <mat-hint>get one for free at &nbsp; https://www.marinetraffic.com</mat-hint>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field appearance="standard" [style.width.px]="400">
+                    <mat-label>Enter a mmsi</mat-label>
+                    <input matInput formControlName="mmsi" class="w-96">
+                    <mat-icon matSuffix>pin</mat-icon>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field [style.width.px]="400">
+                    <mat-label>Enter a date range</mat-label>
+                    <mat-date-range-input [rangePicker]="rangePicker">
+                        <input matStartDate placeholder="Start date" formControlName="fromDate">
+                        <input matEndDate placeholder="End date" formControlName="toDate">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #rangePicker>
+                        <mat-date-range-picker-actions>
+                            <button mat-button matDateRangePickerCancel>Cancel</button>
+                            <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+                        </mat-date-range-picker-actions>
+                    </mat-date-range-picker>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <button mat-flat-button color="primary" (click)="fetchContent()" [disabled]="!formGroup.valid">Fetch</button>
+            </div>
+
+        </form>
+
+    </mat-card-content>
+</mat-card>
+
+<br/>
+<a href="https://www.marinetraffic.com">https://www.marinetraffic.com</a><br/>
+<a href="https://www.marinetraffic.com/en/ais-api-services/documentation/api-service:ps01">API ps01</a><br/>
+<br/>
+

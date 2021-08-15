@@ -81,7 +81,7 @@
                 "parameters": [{
                     "name": "entityName",
                     "in": "path",
-                    "description": "delete the content of a single table",
+                    "description": "delete the content of a table or the whole database",
                     "required": true,
                     "schema": {
                         "type": "string"
@@ -113,11 +113,11 @@
                     "mmsi": {
                         "type": "string"
                     },
-                    "begin": {
+                    "fromDate": {
                         "type": "string",
                         "format": "date-time"
                     },
-                    "end": {
+                    "toDate": {
                         "type": "string",
                         "format": "date-time"
                     }

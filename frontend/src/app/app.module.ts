@@ -28,14 +28,18 @@ import {ApiModule, Configuration} from '../generated';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import { UploadComponent } from './components/upload/upload.component';
-import { FetchComponent } from './components/fetch/fetch.component';
-import { ViewComponent } from './components/view/view.component';
-import { StartComponent } from './components/start/start.component';
-import { ErrorComponent } from './components/error/error.component';
-import { DatabaseComponent } from './components/database/database.component';
-import { NgxFileDropModule } from 'ngx-file-drop';
+import {UploadComponent} from './components/upload/upload.component';
+import {FetchComponent} from './components/fetch/fetch.component';
+import {ViewComponent} from './components/view/view.component';
+import {StartComponent} from './components/start/start.component';
+import {ErrorComponent} from './components/error/error.component';
+import {DatabaseComponent} from './components/database/database.component';
+import {NgxFileDropModule} from 'ngx-file-drop';
 import {SnackBarComponent} from "./components/snack-bar/snack-bar.component";
+import {MatDatepickerModule, MatDateRangeInput} from "@angular/material/datepicker";
+import {MAT_DATE_RANGE_INPUT_PARENT} from "@angular/material/datepicker/date-range-input-parts";
+import {MatNativeDateModule} from "@angular/material/core";
+
 
 @NgModule({
     declarations: [
@@ -60,11 +64,14 @@ import {SnackBarComponent} from "./components/snack-bar/snack-bar.component";
         MatAutocompleteModule,
         MatButtonModule,
         MatCardModule,
+        MatDatepickerModule,
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
         MatListModule,
+        MatNativeDateModule,
         MatMenuModule,
+        MatPaginatorModule,
         MatPaginatorModule,
         MatProgressBarModule,
         MatProgressSpinnerModule,
@@ -73,14 +80,10 @@ import {SnackBarComponent} from "./components/snack-bar/snack-bar.component";
         MatSortModule,
         MatTableModule,
         MatToolbarModule,
-        MatToolbarModule,
         MatTooltipModule,
-        ReactiveFormsModule,
-        ScrollingModule,
         NgxFileDropModule,
-        MatPaginatorModule,
-        MatProgressBarModule,
-        MatProgressSpinnerModule
+        ReactiveFormsModule,
+        ScrollingModule
     ],
     providers: [],
     bootstrap: [AppComponent]

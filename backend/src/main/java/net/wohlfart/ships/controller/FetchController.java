@@ -3,6 +3,7 @@ package net.wohlfart.ships.controller;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.wohlfart.ships.config.FetchException;
 import net.wohlfart.ships.config.UploadException;
 import net.wohlfart.ships.dtos.FetchRequest;
 import net.wohlfart.ships.dtos.StatusResponse;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.Instant;
+import java.time.ZoneOffset;
 
 
 @Slf4j
@@ -33,12 +35,12 @@ public class FetchController {
             fetchService.fetchContent(
                 fetchRequest.getApiKey(),
                 fetchRequest.getMmsi(),
-                fetchRequest.getBegin(),
-                fetchRequest.getEnd()
+                fetchRequest.getFromDate().atOffset(ZoneOffset.UTC).toLocalDate().atStartOfDay().toInstant(ZoneOffset.UTC),
+                fetchRequest.getToDate().atOffset(ZoneOffset.UTC).toLocalDate().atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC)
             );
             return new StatusResponse(StatusResponse.Status.SUCCESS, "processed the files", "nothing went wrong it seems");
         } catch (Exception ex) {
-            throw new UploadException("failed " + ex.getMessage(), ex);
+            throw new FetchException("failed " + ex.getMessage(), ex);
         } finally {
             log.info("<uploadDatabaseContent> finished at {}", Instant.now());
         }

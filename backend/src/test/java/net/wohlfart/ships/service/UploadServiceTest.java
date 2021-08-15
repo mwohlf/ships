@@ -9,6 +9,7 @@ import net.wohlfart.ships.util.PostgresInitializer;
 
 
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
@@ -27,7 +28,8 @@ import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
+@Ignore
+@Disabled
 @Testcontainers(disabledWithoutDocker = true)
 @ContextConfiguration(
     initializers = PostgresInitializer.class

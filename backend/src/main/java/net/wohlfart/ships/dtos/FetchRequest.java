@@ -14,8 +14,8 @@ public class FetchRequest {
 
     String mmsi;
 
-    Instant begin;
+    Instant fromDate;
 
-    Instant end;
+    Instant toDate;
 
 }

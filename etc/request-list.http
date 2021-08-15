@@ -13,3 +13,12 @@ GET {{endpoint}}/{{api-key}}/v:3/period:hourly/days:2/mmsi:{{shipA}}/protocol:js
 
 ###
 GET {{endpoint}}/{{api-key}}/v:3/period:hourly/days:2/mmsi:{{shipB}}/protocol:jsono
+
+
+
+###  https://services.marinetraffic.com/api/exportvesseltrack/d8445923d23c722b0b6ee750c0a6302cae79fdef/v:3/period:hourly/fromdate:2021-08-10%2022:00:00/todate:2021-08-11%2022:00:00/mmsi:310627000/protocol:jsono}
+GET {{endpoint}}/{{api-key}}/v:3/period:hourly/fromdate:2021-08-10%2022:00:00/todate:2021-08-11%2022:00:00/mmsi:215567000/protocol:jsono
+
+
+###
+GET https://services.marinetraffic.com/api/exportvesseltrack/d8445923d23c722b0b6ee750c0a6302cae79fdef/v:3/period:hourly/fromdate:2021-08-03%2022:00:00/todate:2021-08-04%2022:00:00/mmsi:9781865/protocol:jsono

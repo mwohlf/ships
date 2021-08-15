@@ -45,6 +45,10 @@ public abstract class AbstractUploadHandler {
         .ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US)
         .withZone(ZoneId.of("+0"));
 
+    static final DateTimeFormatter JSON_IMPORT__DATE_FORMAT = DateTimeFormatter
+        .ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        .withZone(ZoneId.of("+0"));
+
 
     // common column headers
     static final String SHIP = "SHIP";    // external id used in csv files
@@ -58,9 +62,6 @@ public abstract class AbstractUploadHandler {
 
 
     // marine traffic format and strings
-    static final DateTimeFormatter JSON_IMPORT__DATE_FORMAT = DateTimeFormatter
-        .ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-        .withZone(ZoneId.of("+0"));
     static final String MT_SPEED = "SPEED";
     static final String MT_LON = "LON";
     static final String MT_LAT = "LAT";
