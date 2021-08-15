@@ -28,7 +28,6 @@ import {ApiModule, Configuration} from '../generated';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import { ConfigureComponent } from './components/configure/configure.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { FetchComponent } from './components/fetch/fetch.component';
 import { ViewComponent } from './components/view/view.component';
@@ -40,7 +39,6 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 @NgModule({
     declarations: [
         AppComponent,
-        ConfigureComponent,
         UploadComponent,
         FetchComponent,
         ViewComponent,

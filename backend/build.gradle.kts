@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.commons.csv)
     implementation(libs.netty)
     implementation("com.squareup.okhttp:okhttp:2.7.5")
+    implementation("com.google.code.findbugs:jsr305:3.0.2")
+
 
     implementation(libs.jackson.jsr310)
 

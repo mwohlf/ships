@@ -1,7 +1,7 @@
 package net.wohlfart.ships.upload;
 
 import lombok.extern.slf4j.Slf4j;
-import net.wohlfart.ships.controller.UploadException;
+import net.wohlfart.ships.config.UploadException;
 import net.wohlfart.ships.entities.Ship;
 import net.wohlfart.ships.entities.Speed;
 import org.apache.commons.csv.CSVParser;

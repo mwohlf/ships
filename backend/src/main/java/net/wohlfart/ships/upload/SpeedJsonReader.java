@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
-import net.wohlfart.ships.controller.UploadException;
+import net.wohlfart.ships.config.UploadException;
 import net.wohlfart.ships.entities.Ship;
 import net.wohlfart.ships.entities.Speed;
 import org.springframework.stereotype.Component;

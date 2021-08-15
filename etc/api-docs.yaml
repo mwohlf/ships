@@ -7,7 +7,25 @@ servers:
 - url: http://localhost:8080
   description: Generated server url
 paths:
-  /api/v1/database:
+  /api/v1/fetch:
+    post:
+      tags:
+      - fetch-controller
+      operationId: fetchContent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FetchRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+  /api/v1/database/upload:
     post:
       tags:
       - database-controller
@@ -32,24 +50,66 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadResponse'
+                $ref: '#/components/schemas/StatusResponse'
+  /api/v1/database/delete/{entityName}:
     delete:
       tags:
       - database-controller
       operationId: deleteDatabase
+      parameters:
+      - name: entityName
+        in: path
+        description: delete the content of a single table
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TableDataResponse'
+                $ref: '#/components/schemas/TableDetailsResponse'
 components:
   schemas:
-    UploadResponse:
+    FetchRequest:
       type: object
       properties:
-        text:
+        apiKey:
           type: string
-    TableDataResponse:
+        mmsi:
+          type: string
+        begin:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+    StatusResponse:
       type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - SUCCESS
+          - FAILED
+          - UNDEFINED
+        info:
+          type: string
+        description:
+          type: string
+    SingeTableDetails:
+      type: object
+      properties:
+        name:
+          type: string
+        rowCount:
+          type: integer
+          format: int64
+    TableDetailsResponse:
+      type: object
+      properties:
+        tableDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/SingeTableDetails'

@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {ConfigureComponent} from "./components/configure/configure.component";
 import {FetchComponent} from "./components/fetch/fetch.component";
 import {UploadComponent} from "./components/upload/upload.component";
 import {ViewComponent} from "./components/view/view.component";
@@ -16,16 +15,12 @@ export function routerErrorHandler(error: Error): void {
 
 const routes: Routes = [
     {
-        path: "configure",
-        component: ConfigureComponent,
+        path: "upload",
+        component: UploadComponent,
     },
     {
         path: "fetch",
         component: FetchComponent,
-    },
-    {
-        path: "upload",
-        component: UploadComponent,
     },
     {
         path: "view",
